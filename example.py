@@ -1,1 +1,1 @@
-shady_url = "https://ngrok.io/session"
+shady_url = ((?:https?:\/\/)?[^\n\[\/\?#"']*?(workers\.dev|appdomain\.cloud|ngrok\.io|termbin\.com|localhost\.run|webhook\.(site|cool)|oastify\.com|burpcollaborator\.(me|net)|trycloudflare\.com)\b)
