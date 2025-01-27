@@ -1,1 +1,1 @@
-test = "setup(..., cmdclass = { ..., "$COMMAND": $SCRIPT, ... }, ...)"
+setup(..., cmdclass={"install": CustomInstallCommand}, ...)
