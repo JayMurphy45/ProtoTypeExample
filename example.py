@@ -1,3 +1,1 @@
-import pyperclip
-pyperclip.copy('hello world')
-data = pyperclip.paste()
+shady_url = "https://ngrok.io/session"
