@@ -1,1 +1,1 @@
-setup(..., cmdclass={"install": CustomInstallCommand}, ...)
+setuptools.setup(cmdclass={"install": custom_install})
