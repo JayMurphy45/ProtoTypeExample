@@ -1,5 +1,1 @@
-import setuptools
-
-setuptools.setup(
-    cmdclass={"install": custom_install}
-)
+setuptools.setup(cmdclass={"install": $SCRIPT})
