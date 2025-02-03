@@ -1,1 +1,5 @@
-setuptools.setup(cmdclass={"install": custom_install})
+import setuptools
+
+setuptools.setup(
+    cmdclass={"install": custom_install}
+)
